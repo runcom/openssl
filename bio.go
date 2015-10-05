@@ -124,7 +124,6 @@ func bioSetRetryRead(b *C.BIO) {
 func writeBioWrite(b *C.BIO, data *C.char, size C.int) (rc C.int) {
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Critf("openssl: writeBioWrite panic'd: %v", err)
 			rc = -1
 		}
 	}()
@@ -144,7 +143,6 @@ func writeBioCtrl(b *C.BIO, cmd C.int, arg1 C.long, arg2 unsafe.Pointer) (
 	rc C.long) {
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Critf("openssl: writeBioCtrl panic'd: %v", err)
 			rc = -1
 		}
 	}()
@@ -221,7 +219,6 @@ func loadReadPtr(b *C.BIO) *readBio {
 func readBioRead(b *C.BIO, data *C.char, size C.int) (rc C.int) {
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Critf("openssl: readBioRead panic'd: %v", err)
 			rc = -1
 		}
 	}()
@@ -256,7 +253,6 @@ func readBioCtrl(b *C.BIO, cmd C.int, arg1 C.long, arg2 unsafe.Pointer) (
 
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Critf("openssl: readBioCtrl panic'd: %v", err)
 			rc = -1
 		}
 	}()
