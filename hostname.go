@@ -19,19 +19,7 @@ package openssl
 /*
 #include <openssl/ssl.h>
 #include <openssl/conf.h>
-#include <openssl/x509.h>
-
-#ifndef X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT
-#define X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT	0x1
-#define X509_CHECK_FLAG_NO_WILDCARDS	0x2
-
-extern int X509_check_host(X509 *x, const unsigned char *chk, size_t chklen,
-    unsigned int flags);
-extern int X509_check_email(X509 *x, const unsigned char *chk, size_t chklen,
-    unsigned int flags);
-extern int X509_check_ip(X509 *x, const unsigned char *chk, size_t chklen,
-		unsigned int flags);
-#endif
+#include <openssl/x509v3.h>
 */
 import "C"
 
@@ -60,8 +48,8 @@ const (
 func (c *Certificate) CheckHost(host string, flags CheckFlags) error {
 	chost := unsafe.Pointer(C.CString(host))
 	defer C.free(chost)
-	rv := C.X509_check_host(c.x, (*C.uchar)(chost), C.size_t(len(host)),
-		C.uint(flags))
+	rv := C.X509_check_host(c.x, (*C.char)(chost), C.size_t(len(host)),
+		C.uint(flags), nil)
 	if rv > 0 {
 		return nil
 	}
@@ -79,7 +67,7 @@ func (c *Certificate) CheckHost(host string, flags CheckFlags) error {
 func (c *Certificate) CheckEmail(email string, flags CheckFlags) error {
 	cemail := unsafe.Pointer(C.CString(email))
 	defer C.free(cemail)
-	rv := C.X509_check_email(c.x, (*C.uchar)(cemail), C.size_t(len(email)),
+	rv := C.X509_check_email(c.x, (*C.char)(cemail), C.size_t(len(email)),
 		C.uint(flags))
 	if rv > 0 {
 		return nil
